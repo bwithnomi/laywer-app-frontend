@@ -1,0 +1,15 @@
+#app {
+  width: 100%;
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  /* padding: 2rem; */
+
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'openSans';
+  src: url('./../assets/openSans/static/OpenSans/OpenSans-Regular.ttf');
+}
+body{
+  font-family: 'openSans' !important;
+}
