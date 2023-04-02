@@ -38,7 +38,6 @@
 
           <q-space />
 
-          <q-btn round flat icon="search" />
           <q-btn round flat>
             <q-icon name="attachment" class="rotate-135" />
           </q-btn>
@@ -46,22 +45,10 @@
             <q-menu auto-close :offset="[110, 0]">
               <q-list style="min-width: 150px">
                 <q-item clickable>
-                  <q-item-section>Contact data</q-item-section>
+                  <q-item-section>View Profile</q-item-section>
                 </q-item>
                 <q-item clickable>
                   <q-item-section>Block</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Select messages</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Silence</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Clear messages</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Erase messages</q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
@@ -83,32 +70,6 @@
 
           <q-space />
 
-          <q-btn round flat icon="message" />
-          <q-btn round flat icon="more_vert">
-            <q-menu auto-close :offset="[110, 8]">
-              <q-list style="min-width: 150px">
-                <q-item clickable>
-                  <q-item-section>New group</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Profile</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Archived</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Favorites</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Settings</q-item-section>
-                </q-item>
-                <q-item clickable>
-                  <q-item-section>Logout</q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </q-btn>
-
           <q-btn
             round
             flat
@@ -118,7 +79,7 @@
           />
         </q-toolbar>
 
-        <q-toolbar class="bg-grey-2">
+        <!-- <q-toolbar class="bg-grey-2">
           <q-input
             rounded
             outlined
@@ -132,7 +93,7 @@
               <q-icon name="search" />
             </template>
           </q-input>
-        </q-toolbar>
+        </q-toolbar> -->
 
         <q-scroll-area style="height: calc(100% - 100px)">
           <q-list>
@@ -357,6 +318,7 @@ const setCurrentConversation = async (index: number) => {
         }
       })
       .catch(() => {});
+      toggleLeftDrawer();
   }
 };
 const showImage = (image: string | null | undefined): string => {
