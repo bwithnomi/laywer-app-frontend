@@ -18,10 +18,10 @@
           shrink
           class="row items-center no-wrap"
         >
-          <!-- <img
-            src="https://cdn.quasar.dev/img/layout-gallery/logo-google.svg"
-          /> -->
-          <span class="q-ml-sm text-white">Laywer App</span>
+          <q-avatar
+            ><q-img src="@/assets/logo-png.png" width="100px"
+          /></q-avatar>
+          <span class="q-ml-sm text-white">Adaalat.pk</span>
         </q-toolbar-title>
 
         <q-space />
@@ -30,21 +30,23 @@
           class="GPL__toolbar-input"
           dense
           standout="bg-primary"
-          v-model="search"
-          placeholder="Search"
+          v-model="searchString"
+          debounce="500"
+          :placeholder="`Search for ${userStore.user.data?.role == 'lawyer' ? 'Users' : 'Lawyers'}`"
+          dark
         >
           <template v-slot:prepend>
-            <q-icon v-if="search === ''" name="search" />
+            <q-icon v-if="searchString === ''" name="search" />
             <q-icon
               v-else
               name="clear"
               class="cursor-pointer"
-              @click="search = ''"
+              @click="searchString = ''"
             />
           </template>
         </q-input>
 
-        <q-btn
+        <!-- <q-btn
           v-if="$q.screen.gt.xs"
           flat
           dense
@@ -66,7 +68,7 @@
               </q-item>
             </q-list>
           </q-menu>
-        </q-btn>
+        </q-btn> -->
 
         <!-- <q-btn
           v-if="$q.screen.gt.xs"
@@ -130,7 +132,7 @@
             :key="link.text"
             clickable
             class="GPL__drawer-item"
-            :to="{path: link.link}"
+            :to="{ path: link.link }"
           >
             <q-item-section avatar>
               <q-icon :name="link.icon" />
@@ -189,8 +191,7 @@
     </q-drawer>
 
     <q-page-container class="GPL__page-container bg-grey-4">
-      <RouterView>
-      </RouterView>
+      <RouterView> </RouterView>
 
       <q-page-sticky v-if="$q.screen.gt.sm" expand position="left">
         <div class="fit q-pt-xl q-px-sm column">
@@ -255,19 +256,6 @@
             <q-icon size="22px" name="group" />
             <div class="GPL__side-btn__label">Requests</div>
           </q-btn>
-
-          <q-btn
-            round
-            flat
-            color="grey-8"
-            stack
-            no-caps
-            size="26px"
-            class="GPL__side-btn"
-          >
-            <q-icon size="22px" name="person_search" />
-            <div class="GPL__side-btn__label">Search</div>
-          </q-btn>
         </div>
       </q-page-sticky>
     </q-page-container>
@@ -275,19 +263,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref,watch } from "vue";
 import { useUserStore } from "@/stores/user";
 import { userLogout } from "@/composables/popup";
 import { useRouter } from "vue-router";
 import { RouterView } from "vue-router";
 import userPlaceholder from "@/assets/user.svg";
-import type {UserState} from '@/stores/user'
+import type { UserState } from "@/stores/user";
 import type { Store } from "pinia";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
 const userStore: Store<"user", UserState> = useUserStore();
 const leftDrawerOpen = ref<boolean>(false);
-const search = ref<string>("");
+const {searchString} = storeToRefs(userStore);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -304,22 +293,26 @@ const userLogoutLocal = async () => {
 };
 
 let links1 = [
-  { icon: "home", text: "Home", link: '/' },
-  { icon: "account_circle", text: "Profile", link: '/'  },
-  { icon: "chat", text: "Chat", link: '/chat'  },
-  { icon: "group", text: "Requests", link: '/'  },
-  { icon: "person_search", text: "Search", link: '/'  },
+  { icon: "home", text: "Home", link: "/" },
+  { icon: "account_circle", text: "Profile", link: "/" },
+  { icon: "chat", text: "Chat", link: "/chat" },
+  { icon: "group", text: "Requests", link: "/" },
 ];
-
 
 const showImage = (image: string | null | undefined): string => {
   if (image && image != "") {
-    if(image.includes('https:')) return image;
+    if (image.includes("https:")) return image;
     return `${import.meta.env.VITE_BACKEND_URL}/${image}`;
   } else {
     return userPlaceholder;
   }
 };
+
+watch(searchString, () => {
+  if (searchString.value != '') {
+    router.push({path: '/search'})
+  }
+})
 </script>
 
 <style lang="sass" scoped>

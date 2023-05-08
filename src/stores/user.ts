@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { ChatUser } from "@/interfaces";
 export interface UserState {
+  searchString: string,
   user: {
     data: ChatUser | null,
     token: null | string,
@@ -11,6 +12,7 @@ export interface UserState {
 
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
+    searchString: '',
     user: {
       data: null,
       token: null,
@@ -22,7 +24,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     getToken() {
       this.user.token
-    }
+    },
   },
   persist: true
 
