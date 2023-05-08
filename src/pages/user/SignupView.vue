@@ -11,7 +11,7 @@
         </p>
       </div>
       <q-space :class="[$q.screen.lt.sm ? 'hidden' : '']"></q-space>
-      <div class="col-10 col-md-6 q-py-md">
+      <div class="col-12 col-md-6 q-py-md">
         <q-card style="width: 100%; max-width: 420px; margin: auto">
           <q-card-section>
             <p class="text-h5 text-center text-dark">Register Here</p>

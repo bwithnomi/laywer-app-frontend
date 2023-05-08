@@ -318,7 +318,7 @@ const setCurrentConversation = async (index: number) => {
         }
       })
       .catch(() => {});
-      toggleLeftDrawer();
+      // toggleLeftDrawer();
   }
 };
 const showImage = (image: string | null | undefined): string => {
