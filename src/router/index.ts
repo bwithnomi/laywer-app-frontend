@@ -26,7 +26,13 @@ const router = createRouter({
           path: '/',
           name: 'home',
           meta: { requiresAuth: true },
-          component: () => import("@/pages/HomeView.vue")
+          component: () => import("@/pages/user/HomeView.vue")
+        },
+        {
+          path: '/profile',
+          name: 'profile',
+          meta: { requiresAuth: true },
+          component: () => import("@/pages/user/ProfileView.vue")
         },
         {
           path: '/chat',
@@ -39,6 +45,18 @@ const router = createRouter({
           name: 'search',
           meta: { requiresAuth: true },
           component: () => import("@/pages/user/SearchView.vue")
+        },
+        {
+          path: '/requests',
+          name: 'requests',
+          meta: { requiresAuth: true },
+          component: () => import("@/pages/user/RequestView.vue")
+        },
+        {
+          path: '/case/:id',
+          name: 'case-detail',
+          meta: { requiresAuth: true },
+          component: () => import("@/pages/user/CaseDetail.vue")
         },
       ]
     },

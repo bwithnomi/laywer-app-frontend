@@ -72,6 +72,7 @@
         @update:modelValue="
           $emit('update:modelValue', $event), inputValue($event)
         "
+        rounded
         outlined
         :rules="rules"
       >
@@ -106,7 +107,7 @@
       </q-input>
     </div>
     <!-- if field is simple input field  -->
-    <div v-else-if="isInput">
+    <div v-else-if="isInput && inputType != 'textarea'" >
       <q-input
         @keydown.enter.prevent="onEnter"
         @update:modelValue="
@@ -144,7 +145,31 @@
         <!-- <template v-slot:error> </template> -->
       </q-input>
     </div>
-    <!-- if filed is multi input field  -->
+    <!-- if filed is textarea input field  -->
+    <div v-else-if="isInput && inputType == 'textarea'" style="overflow: hidden">
+      <q-input
+        @keydown.enter.prevent="onEnter"
+        @update:modelValue="
+          inputValue(
+            $event,
+            input_mask != '' && input_mask != null && input_mask != undefined
+          )
+        "
+        :mask="input_mask"
+        rounded
+        outlined
+        :dense="true"
+        :readonly="isDisable"
+        type="textarea"
+        :placeholder="placeHolder"
+        :label="label"
+        :rules="isDepended ? [...rules] : rules"
+        :bottom-slots="true"
+        :modelValue="typeof modelValue == 'string' ? modelValue : undefined"
+        :suffix="suffix"
+      >
+      </q-input>
+    </div>
     <!-- if filed is select input field  -->
     <div v-else>
       <q-select

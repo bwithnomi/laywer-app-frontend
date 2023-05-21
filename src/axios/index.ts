@@ -16,12 +16,17 @@ axiosApiClient.interceptors.request.use(config => {
 axiosApiClient.interceptors.response.use(response => {
   return response;
 }, (error) => {
-  if (error.response.status == 422) {
+  console.log(error);
+  if (error.code && error.code == 'ERR_NETWORK') {
+    notify('Server not responding', 'negative', 'error');
+  } else if (error.response.status == 422) {
     error.response.data.errors.forEach((eachError: ValidationError) => {
       notify(eachError.msg, 'negative', 'error');
     });
   } else if (error.response.status == 401) {
     notify('Unauthenticated user', 'negative', 'error');
+  } else if (error.response.status == 500) {
+    notify('Internal server error', 'negative', 'error');
   } else if (error.response.status == 403) {
     notify('Unauthorized action', 'negative', 'error');
   }
