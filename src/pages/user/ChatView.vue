@@ -226,6 +226,7 @@
 
 <script setup lang="ts">
 import type { Store } from "pinia";
+import {useRoute} from 'vue-router'
 import type { Conversation, Message } from "@/interfaces";
 import { useQuasar } from "quasar";
 import { ref, computed, onMounted } from "vue";
@@ -235,16 +236,15 @@ import userPlaceholder from "@/assets/user.svg";
 import { useUserStore } from "@/stores/user";
 import type {UserState} from '@/stores/user'
 import moment from "moment";
-
 import { socket } from "@/socket";
 
+const route = useRoute();
 const userStore: Store<"user", UserState> = useUserStore();
 const conversations: Ref<Conversation[]> = ref([]);
 const scrollEnable: Ref<boolean | undefined> = ref(true);
 const $q = useQuasar();
 const messages: Ref<Message[]> = ref([]);
 const leftDrawerOpen: Ref<boolean | undefined> = ref(false);
-const search: Ref<any> = ref("");
 const messageToSend: Ref<any> = ref("");
 const currentConversationIndex: Ref<number> = ref(0);
 
@@ -335,9 +335,23 @@ onMounted(async () => {
     .post(`/user/get-conversations`)
     .then(async (res) => {
       conversations.value = res.data.data;
+      let current_convo_id = conversations.value[0]?._id;
+      if (route.query.user && route.query.user != null) {
+        currentConversationIndex.value = conversations.value.findIndex( e => (route.query.user == e.receiver?._id) || (route.query.user == e.sender?._id));
+        conversations.value.forEach(e => {
+          if ((route.query.user == e.receiver?._id)) {
+            console.log(e);
+            
+            current_convo_id = e._id;
+          } else if ((route.query.user == e.sender?._id)) {
+            console.log(e);
+            current_convo_id = e._id;
+          }
+        });
+      }
       await axiosApiClient
         .post(`/user/get-messages`, {
-          conversation_id: conversations.value[0]?._id,
+          conversation_id: current_convo_id,
         })
         .then((res) => {
           console.log("mounted");

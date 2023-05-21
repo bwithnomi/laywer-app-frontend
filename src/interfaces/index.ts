@@ -10,6 +10,15 @@ export interface ChatUser{
   updatedAt: string,
   __v: number,
 }
+export interface ChatRequest{
+  _id: string,
+  sender: ChatUser | null,
+  receiver: ChatUser | null,
+  status: string | null,
+  createdAt: string,
+  updatedAt: string,
+  __v: number,
+}
 export interface Conversation{
   _id: string,
   sender: ChatUser | null,

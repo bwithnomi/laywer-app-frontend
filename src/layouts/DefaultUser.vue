@@ -32,7 +32,9 @@
           standout="bg-primary"
           v-model="searchString"
           debounce="500"
-          :placeholder="`Search for ${userStore.user.data?.role == 'lawyer' ? 'Users' : 'Lawyers'}`"
+          :placeholder="`Search for ${
+            userStore.user.data?.role == 'lawyer' ? 'Users' : 'Lawyers'
+          }`"
           dark
         >
           <template v-slot:prepend>
@@ -217,9 +219,24 @@
             no-caps
             size="26px"
             class="GPL__side-btn"
+            :to="{ path: '/profile' }"
           >
             <q-icon size="22px" name="account_circle" />
             <div class="GPL__side-btn__label">Profile</div>
+          </q-btn>
+
+          <q-btn
+            round
+            flat
+            color="grey-8"
+            stack
+            no-caps
+            size="26px"
+            class="GPL__side-btn"
+            :to="{ path: '/search' }"
+          >
+            <q-icon size="22px" name="search" />
+            <div class="GPL__side-btn__label">Find</div>
           </q-btn>
 
           <q-btn
@@ -252,6 +269,7 @@
             no-caps
             size="26px"
             class="GPL__side-btn"
+            :to="{ path: '/requests' }"
           >
             <q-icon size="22px" name="group" />
             <div class="GPL__side-btn__label">Requests</div>
@@ -263,7 +281,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref,watch } from "vue";
+import { ref, watch } from "vue";
 import { useUserStore } from "@/stores/user";
 import { userLogout } from "@/composables/popup";
 import { useRouter } from "vue-router";
@@ -276,7 +294,7 @@ import { storeToRefs } from "pinia";
 const router = useRouter();
 const userStore: Store<"user", UserState> = useUserStore();
 const leftDrawerOpen = ref<boolean>(false);
-const {searchString} = storeToRefs(userStore);
+const { searchString } = storeToRefs(userStore);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -294,9 +312,10 @@ const userLogoutLocal = async () => {
 
 let links1 = [
   { icon: "home", text: "Home", link: "/" },
-  { icon: "account_circle", text: "Profile", link: "/" },
+  { icon: "account_circle", text: "Profile", link: "/profile" },
+  { icon: "search", text: "Find", link: "/search" },
   { icon: "chat", text: "Chat", link: "/chat" },
-  { icon: "group", text: "Requests", link: "/" },
+  { icon: "group", text: "Requests", link: "/requests" },
 ];
 
 const showImage = (image: string | null | undefined): string => {
@@ -309,10 +328,10 @@ const showImage = (image: string | null | undefined): string => {
 };
 
 watch(searchString, () => {
-  if (searchString.value != '') {
-    router.push({path: '/search'})
+  if (searchString.value != "") {
+    router.push({ path: "/search" });
   }
-})
+});
 </script>
 
 <style lang="sass" scoped>
