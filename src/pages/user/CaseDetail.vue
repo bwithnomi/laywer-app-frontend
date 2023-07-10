@@ -1,5 +1,5 @@
 <template lang="">
-  <div style="height: 100vh; padding: 40px">
+  <div style="min-height: 100vh; padding: 40px">
     <div class="row justify-center" v-if="loading">
       <q-spinner-cube color="orange" size="2.5em" />
     </div>
@@ -129,6 +129,41 @@
             <p>Feedback: {{ userCase.reviews[0].feedback }}</p>
           </q-card-section>
         </q-card>
+        <q-card
+          class="q-mt-md"
+          v-if="
+            (userCase.status == 1 || userCase.status == 3)
+          "
+        >
+          <q-card-section class="column">
+            <div class="row justify-between items-center">
+              <p class="text-h6">Case Documents</p>
+              <q-btn
+                label="Add"
+                color="dark"
+                icon="add"
+                no-caps
+                @click="addDocument = true"
+                v-if="userCase.status == 1"
+              ></q-btn>
+            </div>
+            <div class="">
+            <div
+              class=""
+              v-for="(document, index) in userCase.documents"
+              :key="index"
+            >
+              <p class="q-mb-none">
+                Uploaded at:
+                {{ moment(document.createdAt).format("MMM DD, YYYY - hh:mm a") }}
+              </p>
+              <p>Download:<a target="_blank" :href="baseBackendUrl+'/'+document.document">{{ document.document.split("public/user/case/documents/")[1].slice(0,4)+"..."+document.document.split("public/user/case/documents/")[1].slice(document.document.split("public/user/case/documents/")[1].length-8,document.document.split("public/user/case/documents/")[1].length) }}</a>
+                <!-- <q-btn size="sm" icon="download" color="red" @click="downloadFile(baseBackendUrl+'/'+document.document, document.document.split('public/user/case/documents/')[1])"></q-btn> -->
+              </p>
+            </div>
+            </div>
+          </q-card-section>
+        </q-card>
       </div>
       <div class="col col-md-6">
         <q-card>
@@ -219,6 +254,34 @@
     </div>
   </div>
 
+
+  <q-dialog v-model="addDocument" no-backdrop-dismiss>
+    <q-card style="max-width: 450px; width: 100%">
+      <q-card-section>
+        <p class="text-h6">Add Document</p>
+        <q-file
+          outlined
+          dense
+          rounded
+          class="q-mb-sm"
+          :isInputLabelShow="false"
+          v-model="caseDocModel.doc"
+          label="Document"
+          :rules="[rules.required]"
+        ></q-file>
+        <div class="row justify-between">
+          <q-btn label="Close" @click="addDocument = false" no-caps flat></q-btn>
+          <q-btn
+            label="Save"
+            no-caps
+            color="dark"
+            @click="addNewDocument"
+            :loading="adding"
+          ></q-btn>
+        </div>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
   <q-dialog v-model="addUpdate" no-backdrop-dismiss>
     <q-card style="max-width: 450px; width: 100%">
       <q-card-section>
@@ -269,7 +332,10 @@ import rules from "@/composables/validationRules";
 import moment from "moment";
 import { useUserStore } from "@/stores/user";
 import FormInput from "@/partials/FormInput.vue";
+import useFormData from "@/composables/formdate";
 
+const myAnchor = ref(null)
+const baseBackendUrl = import.meta.env.VITE_BACKEND_URL;
 const addingReview = ref(false);
 const adding = ref(false);
 const userStore = useUserStore();
@@ -277,6 +343,7 @@ const route = useRoute();
 const router = useRouter();
 const userCase = ref({});
 const addUpdate = ref(false);
+const addDocument = ref(false);
 const conversations = ref([]);
 const loading = ref(true);
 const hearingModel = ref({
@@ -287,6 +354,9 @@ const reviewModel = ref({
   rating: "",
   feedback: "",
 });
+const caseDocModel = ref({
+  doc: "",
+})
 const showImage = (image: any) => {
   if (image && image != "") {
     if (image.includes("https:")) return image;
@@ -298,7 +368,15 @@ const showImage = (image: any) => {
 const startConversation = (receiver_id: string | number) => {
   router.push({ path: "/chat", query: { user: receiver_id } });
 };
+const downloadFile = async (url: string, fileName: string) => {
 
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
 const isMyFriend = (user_id: string | number | null) => {
   let index = conversations.value.findIndex(
     (e) =>
@@ -331,6 +409,17 @@ const addNewUpdate = async () => {
   adding.value = false;
   addUpdate.value = false;
 };
+const addNewDocument = async () => {
+  adding.value = true;
+  let formData = useFormData({ ...caseDocModel.value, case_id: userCase.value?._id });
+  await axiosApiClient
+    .post("/case/add-document", formData)
+    .then((res) => {
+      userCase.value.documents.push(res.data.data);
+    });
+  adding.value = false;
+  addDocument.value = false;
+}
 const addReview = async () => {
   addingReview.value = true;
   await axiosApiClient
@@ -355,7 +444,7 @@ onMounted(async () => {
     .then(async (res) => {
       conversations.value = res.data.data;
     })
-    .catch(() => {});
+    .catch(() => { });
   loading.value = false;
 });
 </script>

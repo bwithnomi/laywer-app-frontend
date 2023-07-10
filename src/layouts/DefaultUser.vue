@@ -87,10 +87,10 @@
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn round dense flat color="white" icon="notifications">
+          <!-- <q-btn round dense flat color="white" icon="notifications">
             <q-badge color="yellow" text-color="dark" floating> 2 </q-badge>
             <q-tooltip>Notifications</q-tooltip>
-          </q-btn>
+          </q-btn> -->
           <q-btn
             round
             dense
@@ -101,7 +101,7 @@
           >
             <q-tooltip>Logout</q-tooltip>
           </q-btn>
-          <q-btn round flat>
+          <q-btn round flat :label="`${userStore?.user?.data?.role}&nbsp;&nbsp;`"  color="yellow-8">
             <q-avatar size="26px" color="white">
               <img :src="showImage(userStore.user?.data?.profile_image)" />
             </q-avatar>

@@ -42,3 +42,14 @@ export interface ValidationError {
   param?: string,
   location?: string,
 }
+export interface Case {
+  _id: string,
+  user: ChatUser | null,
+  lawyer: ChatUser | null,
+  title: string,
+  description: string,
+  status: string,
+  createdAt: string,
+  updatedAt: string,
+  __v: number,
+}

@@ -14,7 +14,7 @@
       <div class="col-12 col-md-6 q-py-md">
         <q-card style="width: 100%; max-width: 420px; margin: auto">
           <q-card-section>
-            <p class="text-h5 text-center text-dark">Login as user</p>
+            <p class="text-h5 text-center text-dark">Login as User/Lawyer</p>
 
             <q-form
               @submit.prevent=""
@@ -78,7 +78,7 @@
             :disable="googleLogging"
             color="red-6"
             rounded
-            label="Google login"
+            label="Google login as user"
             no-caps
           ></q-btn>
         </div>
